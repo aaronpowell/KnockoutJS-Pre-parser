@@ -1,6 +1,7 @@
 (function(undefined) {
   var _applyBindings,
-    rx = /^data-ko-/;
+    attrRegex = /^data-ko-/,
+    propRegex = /^data-ko-(.+)/;
   if(!ko) {
     throw 'Knockout hasn\'t been included on the page yet, ensure that knockout.preparser is included after knockout itself';
   }
@@ -15,15 +16,15 @@
     
     for(var i=0, il=attributes.length; i < il; i++) {
       attribute = attributes[i];
-      if(rx.test(attribute.name)) {
+      if(attrRegex.test(attribute.name)) {
         if(dataBind) {
           dataBind += ',';
         }
-        dataBind += attribute.name + ':' + attribute.value;
+        dataBind += attribute.name.match(propRegex)[1] + ':' + attribute.value;
       }
     }
     
-    rootNode['data-bind'] = dataBind;
+    rootNode.setAttribute('data-bind', dataBind);
     
     _applyBindings(viewModel, rootNode);
   };
