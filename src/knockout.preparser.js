@@ -13,7 +13,8 @@
     var attributes = node.attributes,
         attribute,
         dataBind = '',
-        children = node.childNodes;
+        children = node.childNodes,
+        name;
         
     for(var i=0, il=attributes.length; i < il; i++) {
       attribute = attributes[i];
@@ -21,7 +22,8 @@
         if(dataBind) {
           dataBind += ',';
         }
-        dataBind += attribute.name.match(propRegex)[1] + ':' + attribute.value;
+        name = attribute.name.match(propRegex)[1]
+        dataBind += name + ':' + (attribute.value || name);
       }
     }
     

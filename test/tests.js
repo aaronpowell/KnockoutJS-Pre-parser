@@ -22,3 +22,11 @@ test('parsed bindings work in knockout', function() {
   
   ok(node.innerHTML === 'Aaron');
 });
+
+test('binding properties based on convention', function() {
+  var node = $('<div data-ko-text></div>').get(0);
+  
+  ko.applyBindings({ text: 'Aaron' }, node);
+  
+  ok(node.innerHTML === 'Aaron');
+});
