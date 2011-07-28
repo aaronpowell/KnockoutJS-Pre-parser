@@ -12,7 +12,8 @@
   parse = function(node) {
     var attributes = node.attributes,
         attribute,
-        dataBind = '';
+        dataBind = '',
+        children = node.childNodes;
         
     for(var i=0, il=attributes.length; i < il; i++) {
       attribute = attributes[i];
@@ -26,8 +27,8 @@
     
     node.setAttribute('data-bind', dataBind);
     
-    for(var i=0, il = node.childNodes; i < il; i++) {
-      parse(node.childNodes[i]);
+    for(var i=0, il = children; i < il; i++) {
+      parse(children[i]);
     }
   };
   
