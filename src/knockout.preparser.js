@@ -27,7 +27,7 @@
     
     node.setAttribute('data-bind', dataBind);
     
-    for(var i=0, il = children; i < il; i++) {
+    for(var i=0, il = children.length; i < il; i++) {
       parse(children[i]);
     }
   };
