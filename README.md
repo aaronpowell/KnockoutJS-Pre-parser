@@ -22,4 +22,4 @@ The intent is for the `data-ko-*` attributes to describe in your HTML rather tha
 
 # Version
 
-0.0.1
+0.0.2
