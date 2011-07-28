@@ -38,3 +38,11 @@ test('bindings can be provided from a schema', function() {
   
   ok(node.getAttribute('data-bind'));
 });
+
+test('schema bindings get applied by knockout', function() {
+  var node = $('<div></div>').get(0);
+  
+  ko.applyBindings({firstName: 'Aaron'}, { text: 'firstName' }, node);
+  
+  ok(node.innerHTML === 'Aaron');
+})

@@ -12,7 +12,7 @@
   _applyBindings = ko.applyBindings;
   
   parseSchema = function(schema, node) {
-    var propertyName, name, i, il
+    var propertyName, i, il
         dataBind = node.getAttribute('data-bind') || '',
         children = node.childNode;
         
@@ -24,7 +24,7 @@
         dataBind += ',';
       }
       
-      dataBind += name + ': ' + property || name;
+      dataBind += propertyName + ': ' + property || propertyName;
     }
     node.setAttribute('data-bind', dataBind);
     //for(i = 0, il = children.length; i < il; i++) {
