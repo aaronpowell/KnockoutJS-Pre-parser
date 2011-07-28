@@ -30,3 +30,11 @@ test('binding properties based on convention', function() {
   
   ok(node.innerHTML === 'Aaron');
 });
+
+test('bindings can be provided from a schema', function() {
+  var node = $('<div></div>').get(0);
+  
+  ko.applyBindings({text: ''}, { text: 'text' }, node);
+  
+  ok(node.getAttribute('data-bind'));
+});
