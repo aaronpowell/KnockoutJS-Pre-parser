@@ -45,4 +45,4 @@ test('schema bindings get applied by knockout', function() {
   ko.applyBindings({firstName: 'Aaron'}, { text: 'firstName' }, node);
   
   ok(node.innerHTML === 'Aaron');
-})
+});
