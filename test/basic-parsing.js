@@ -1,3 +1,5 @@
+module('basic parsing');
+
 test('parser picks up root level attributes', function() {
   var node = $('<div data-ko-text="firstName"></div>').get(0);
   
