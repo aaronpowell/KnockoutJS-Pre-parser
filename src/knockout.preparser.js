@@ -1,9 +1,7 @@
 (function (undefined) {
-  var _applyBindings,
+  var _applyBindings, parse, parseSchema, parseTemplate
       attrRegex = /^data-ko-/,
       propRegex = /^data-ko-(.+)/,
-      parse,
-      parseSchema,
       __hasOwnProperty = Object.prototype.hasOwnProperty;
   if (!ko) {
     throw 'Knockout hasn\'t been included on the page yet, ensure that knockout.preparser is included after knockout itself';
@@ -32,9 +30,25 @@
     //}
   };
 
+  parseTemplate = function(id) {
+    var templateWrapper, i, il, nodes, template;
+    
+    templateWrapper = $('<div></div>');
+    template = $('#' + id);
+          
+    templateWrapper.html(template.html())
+    parse(templateWrapper.get(0));
+    
+    template.empty();
+    
+    nodes = templateWrapper.children().get();
+    
+    template.html(templateWrapper.html());
+  };
+  
   parse = function (node) {
     if (node.nodeType === 3 || node.nodeType == 8) return;
-    var attribute, name, i, il,
+    var attribute, name, i, il, value,
         attributes = node.attributes,
         dataBind = node.getAttribute('data-bind') || '',
         children = node.childNodes
@@ -46,11 +60,13 @@
         if (dataBind) {
           dataBind += ',';
         }
-        name = attribute.name.match(propRegex)[1]
+        name = attribute.name.match(propRegex)[1];
+        value = (attribute.value || name);
         if(name === 'template') {
-          dataBind += name + ': \'' + (attribute.value || name) + '\'';
+          dataBind += name + ': \'' + value + '\'';
+          parseTemplate(value);
         } else {
-          dataBind += name + ':' + (attribute.value || name);
+          dataBind += name + ':' + value;
         }
       }
     }
