@@ -53,3 +53,26 @@ test('looping templat is parsed', function() {
 
   equal(node.children.length, 4);
 });
+
+module('template with properties', {
+  setup: function() {
+    this.templateName = 'properties-template';
+    
+    $('<script type="application/x-jquery-tmpl" id="' + this.templateName + '"><span data-ko-text="$item.foo"></span></script>')
+      .appendTo(document.body);
+  },
+  teardown: function() {
+    $('#' + this.templateName)
+      .remove();
+  }
+});
+
+test('simple template option parsed', function() {
+  var node = $('<div data-ko-template="' + this.templateName + '" data-ko-template-options="{ foo: \'bar\' }"></div>').get(0);
+  
+  ko.applyBindings({
+    firstName: 'Aaron'
+  }, node);
+
+  equal(node.children[0].innerHTML, 'bar');
+});

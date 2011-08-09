@@ -55,4 +55,4 @@ If you want to use convention based attributes you just use KnockoutJS as you no
 
 # Version
 
-0.0.2
+0.0.3

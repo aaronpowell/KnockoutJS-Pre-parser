@@ -1,7 +1,8 @@
 (function (undefined) {
-  var _applyBindings, parse, parseSchema, parseTemplate
+  var _applyBindings, parse, parseSchema, parseTemplate, buildTemplateBinding,
       attrRegex = /^data-ko-/,
       propRegex = /^data-ko-(.+)/,
+      templateRegex = /^data-ko-template-(.+)/,
       __hasOwnProperty = Object.prototype.hasOwnProperty;
   if (!ko) {
     throw 'Knockout hasn\'t been included on the page yet, ensure that knockout.preparser is included after knockout itself';
@@ -36,7 +37,7 @@
     templateWrapper = $('<div></div>');
     template = $('#' + id);
           
-    templateWrapper.html(template.html())
+    templateWrapper.html(template.html());
     parse(templateWrapper.get(0));
     
     template.empty();
@@ -44,6 +45,7 @@
     nodes = templateWrapper.children().get();
     
     template.html(templateWrapper.html());
+    template.get(0).text = template.html();
   };
   
   parse = function (node) {
@@ -51,8 +53,7 @@
     var attribute, name, i, il, value,
         attributes = node.attributes,
         dataBind = node.getAttribute('data-bind') || '',
-        children = node.childNodes
-        ;
+        children = node.childNodes;
 
     for (i = 0, il = attributes.length; i < il; i++) {
       attribute = attributes[i];
@@ -61,23 +62,44 @@
           dataBind += ',';
         }
         name = attribute.name.match(propRegex)[1];
-        value = (attribute.value || name);
-        if(name === 'template') {
-          dataBind += name + ': \'' + value + '\'';
-          parseTemplate(value);
-        } else {
-          dataBind += name + ':' + value;
+        if(!templateRegex.test(attribute.name)) {
+          value = (attribute.value || name);
+          if(name === 'template') {
+            dataBind = buildTemplateBinding(attributes, value, dataBind);
+            parseTemplate(value);
+          } else {
+            dataBind += name + ':' + value;
+          }
         }
       }
     }
 
-    node.setAttribute('data-bind', dataBind);
+    if(dataBind) {
+      node.setAttribute('data-bind', dataBind);
+    }
 
     for (i = 0, il = children.length; i < il; i++) {
       parse(children[i]);
     }
   };
 
+  buildTemplateBinding = function(attributes, templateName, dataBind) {
+    var i, il, attributes, prop, value,
+        templateString = "template: { name: '" + templateName + "'";
+    for(i = 0, il = attributes.length; i < il; i++) {
+      attribute = attributes[i];
+      if(templateRegex.test(attribute.name)) {
+        prop = attribute.name.match(templateRegex)[1];
+        if(prop === 'options') {
+          prop = 'templateOptions';
+        }
+        value = attribute.value || prop;
+        templateString += ',' + prop + ':' + value;
+      }
+    }
+    return templateString + " }";
+  },
+  
   ko.applyBindings = function (viewModel, schema, rootNode) {
     //check if the 2nd argument is a DOM element or a schema for the bindings
     if (schema && schema.nodeType !== undefined) {
